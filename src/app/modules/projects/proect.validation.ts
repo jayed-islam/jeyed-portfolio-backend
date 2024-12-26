@@ -23,8 +23,13 @@ const createProjectValidationSchema = z.object({
     status: z.enum(['IN_PROGRESS', 'COMPLETED', 'CANCELLED'], {
       required_error: 'Status is required',
     }),
-    startDate: z.date({ required_error: 'Start Date is required' }),
-    endDate: z.date().optional(),
+    startDate: z
+      .string({ required_error: 'Start Date is required' })
+      .transform((value) => new Date(value)),
+    endDate: z
+      .string()
+      .optional()
+      .transform((value) => (value ? new Date(value) : undefined)),
   }),
 });
 
@@ -46,8 +51,14 @@ const updateProjectValidationSchema = z.object({
     category: z.string().optional(),
     isFeatured: z.boolean().optional(),
     status: z.enum(['IN_PROGRESS', 'COMPLETED', 'CANCELLED']).optional(),
-    startDate: z.date().optional(),
-    endDate: z.date().optional(),
+    startDate: z
+      .string()
+      .transform((value) => new Date(value))
+      .optional(),
+    endDate: z
+      .string()
+      .optional()
+      .transform((value) => (value ? new Date(value) : undefined)),
     updatedBy: z.string().optional(),
     isDeleted: z.boolean().optional(),
   }),

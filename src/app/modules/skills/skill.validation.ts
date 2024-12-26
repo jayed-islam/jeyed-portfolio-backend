@@ -24,9 +24,8 @@ const updateSkillValidationSchema = z.object({
 });
 
 const getSkillListValidation = z.object({
-  query: z.object({
+  body: z.object({
     searchTerm: z.string().optional(),
-    category: z.string().optional(),
     page: z.number().optional().default(1),
     limit: z.number().optional().default(10),
   }),

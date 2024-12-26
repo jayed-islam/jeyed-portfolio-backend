@@ -11,7 +11,7 @@ const router = express.Router();
 // Route to create a new blog
 router.post(
   '/',
-  multerUpload.array('file'),
+  multerUpload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body && req.body.data) {
       req.body = JSON.parse(req.body.data);
@@ -28,8 +28,8 @@ router.post(
 );
 
 // Route to get a list of blogs with optional filters and pagination
-router.get(
-  '/',
+router.post(
+  '/list',
   validateRequest(BlogValidation.getBlogListValidation),
   BlogController.getBlogList,
 );

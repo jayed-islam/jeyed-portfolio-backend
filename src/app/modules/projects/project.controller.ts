@@ -7,6 +7,7 @@ import { ProjectServices } from './project.service';
 const createProject = catchAsync(async (req: Request, res: Response) => {
   const projectData = req.body;
   const file = req.file;
+  console.log('fie', file);
   const project = await ProjectServices.createProject(projectData, file);
 
   sendResponse(res, {
@@ -18,7 +19,7 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getProjectList = catchAsync(async (req: Request, res: Response) => {
-  const { page = 1, limit = 10, searchTerm } = req.query;
+  const { page = 1, limit = 10, searchTerm } = req.body;
   const { projects, pagination } = await ProjectServices.getProjectList(
     String(searchTerm),
     Number(page),

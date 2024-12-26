@@ -11,4 +11,5 @@ export interface IExperience extends Document {
   activities: string[];
   location: string;
   isDeleted?: boolean;
+  isCurrentWorking?: boolean;
 }

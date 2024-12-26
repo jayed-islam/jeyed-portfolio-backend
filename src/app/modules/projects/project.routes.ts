@@ -13,7 +13,7 @@ const router = Router();
 router.post(
   '/',
   auth(USER_ROLE.admin, USER_ROLE.vendor),
-  multerUpload.array('file'),
+  multerUpload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body && req.body.data) {
       req.body = JSON.parse(req.body.data);
@@ -29,7 +29,7 @@ router.post(
   ProjectController.createProject,
 );
 
-router.get('/list', ProjectController.getProjectList);
+router.post('/list', ProjectController.getProjectList);
 
 router.get('/:projectId', ProjectController.getSingleProjectById);
 

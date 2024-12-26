@@ -22,15 +22,15 @@ const modulesRoutes = [
     route: ProjectRoutes,
   },
   {
-    path: '/experience',
+    path: '/experiences',
     route: ExperienceRoutes,
   },
   {
-    path: '/blog',
+    path: '/blogs',
     route: BlogRoutes,
   },
   {
-    path: '/skill',
+    path: '/skills',
     route: SkillRoutes,
   },
 ];

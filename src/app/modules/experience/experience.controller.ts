@@ -17,7 +17,7 @@ const createExperience = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getExperienceList = catchAsync(async (req: Request, res: Response) => {
-  const { page = 1, limit = 10, searchTerm } = req.query;
+  const { page = 1, limit = 10, searchTerm } = req.body;
   const { experiences, pagination } =
     await ExperienceServices.getExperienceList(
       String(searchTerm),

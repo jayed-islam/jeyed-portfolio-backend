@@ -25,7 +25,6 @@ const experienceSchema = new Schema<IExperience>(
     },
     activities: {
       type: [String],
-      required: true,
     },
     startDate: {
       type: Date,
@@ -33,7 +32,6 @@ const experienceSchema = new Schema<IExperience>(
     },
     endDate: {
       type: Date,
-      required: true,
     },
     location: {
       type: String,
@@ -42,6 +40,9 @@ const experienceSchema = new Schema<IExperience>(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    isCurrentWorking: {
+      type: Boolean,
     },
   },
   {

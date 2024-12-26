@@ -18,12 +18,22 @@ const createExperienceValidationSchema = z.object({
       .string({ required_error: 'Company website is required' })
       .min(1, { message: 'Company website must not be empty' })
       .trim(),
-    startDate: z.date({ required_error: 'Start Date is required' }),
-    endDate: z.date({ required_error: 'End Date is required' }),
+    companyLogo: z
+      .string({ required_error: 'companyLogo is required' })
+      .min(1, { message: 'companyLogo must not be empty' })
+      .trim(),
+    startDate: z
+      .string({ required_error: 'Start Date is required' })
+      .transform((value) => new Date(value)),
+    endDate: z
+      .string()
+      .optional()
+      .transform((value) => (value ? new Date(value) : undefined)),
     location: z
       .string({ required_error: 'Location is required' })
       .min(1, { message: 'Location must not be empty' })
       .trim(),
+    isCurrentWorking: z.boolean().optional(),
   }),
 });
 
@@ -39,10 +49,16 @@ const updateExperienceValidationSchema = z.object({
       .optional(),
     company: z.string().optional(),
     location: z.string().optional(),
-    startDate: z.date().optional(),
-    endDate: z.date().optional(),
+    startDate: z
+      .string({ required_error: 'Start Date is required' })
+      .transform((value) => new Date(value)),
+    endDate: z
+      .string()
+      .optional()
+      .transform((value) => (value ? new Date(value) : undefined)),
     updatedBy: z.string().optional(),
     isDeleted: z.boolean().optional(),
+    isCurrentWorking: z.boolean().optional(),
   }),
 });
 

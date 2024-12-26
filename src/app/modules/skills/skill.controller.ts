@@ -18,7 +18,7 @@ const createSkill = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSkillList = catchAsync(async (req: Request, res: Response) => {
-  const { page = 1, limit = 10, searchTerm } = req.query;
+  const { page = 1, limit = 10, searchTerm } = req.body;
   const { skills, pagination } = await SkillServices.getSkillList(
     String(searchTerm),
     Number(page),

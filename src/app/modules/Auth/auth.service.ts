@@ -11,7 +11,7 @@ import bcrypt from 'bcrypt';
 import { sendEmail } from '../../utils/sendEmail';
 import mongoose from 'mongoose';
 
-const registerUserIntoDB = async ({ email, password, role }: TAuthUser) => {
+const registerUserIntoDB = async ({ email, password }: TAuthUser) => {
   const existingUser = await User.isUserExistsByEmail(email);
   if (existingUser) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User already exists');
@@ -22,7 +22,7 @@ const registerUserIntoDB = async ({ email, password, role }: TAuthUser) => {
 
   try {
     // Create the new user
-    const newUser = new User({ email, password, role });
+    const newUser = new User({ email, password });
     const savedUser = await newUser.save({ session });
 
     await session.commitTransaction();

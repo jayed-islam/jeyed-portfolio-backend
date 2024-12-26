@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import { IProject } from './project.interface';
 
 const createProject = async (projectData: IProject, file?: any) => {
+  console.log('fie 2', file);
   if (file) {
     projectData.image = file.path;
   }

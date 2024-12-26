@@ -14,7 +14,7 @@ router.post(
   ExperienceController.createExperience,
 );
 
-router.get(
+router.post(
   '/list',
   validateRequest(ExperienceValidation.getExperienceListValidation),
   ExperienceController.getExperienceList,

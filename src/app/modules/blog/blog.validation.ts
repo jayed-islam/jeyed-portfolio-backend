@@ -7,12 +7,11 @@ const createBlogValidationSchema = z.object({
       .min(1, { message: 'Title is required' })
       .max(100, { message: 'Title must not exceed 100 characters' })
       .trim(),
+    description: z.string().optional(),
     content: z.string().min(1, { message: 'Content is required' }).trim(),
     author: z.string().min(1, { message: 'Author is required' }).trim(),
     category: z.string().optional(),
     tags: z.array(z.string()).optional(),
-    isPublished: z.boolean().optional(),
-    isDeleted: z.boolean().optional(),
   }),
 });
 

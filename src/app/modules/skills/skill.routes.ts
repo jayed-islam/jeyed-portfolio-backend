@@ -9,8 +9,8 @@ import httpStatus from 'http-status';
 const router = express.Router();
 
 router.post(
-  '/create',
-  multerUpload.array('file'),
+  '/',
+  multerUpload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body && req.body.data) {
       req.body = JSON.parse(req.body.data);
@@ -26,7 +26,7 @@ router.post(
   SkillController.createSkill,
 );
 
-router.get(
+router.post(
   '/list',
   validateRequest(SkillValidation.getSkillListValidation),
   SkillController.getSkillList,

@@ -13,5 +13,6 @@ export interface IProject extends Document {
   status: string;
   startDate: Date;
   endDate: Date;
-  isFeatured: boolean;
+  isPublished: boolean;
+  isDeleted: boolean;
 }

@@ -97,14 +97,7 @@ const getAllUsers = async () => {
 };
 
 const getUserProfile = async (userId: string) => {
-  const user = await User.findById(userId)
-    .populate({
-      path: 'followedVendors',
-      select: 'shopName address',
-    })
-    .populate('vendor')
-    .sort({ createdAt: -1 })
-    .exec();
+  const user = await User.findById(userId).exec();
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found.');

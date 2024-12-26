@@ -30,13 +30,15 @@ const projectSchema = new Schema<IProject>(
     },
     image: {
       type: String,
-      required: true,
     },
     category: {
       type: String,
-      required: true,
     },
-    isFeatured: {
+    isPublished: {
+      type: Boolean,
+      default: false,
+    },
+    isDeleted: {
       type: Boolean,
       default: false,
     },
