@@ -1,0 +1,167 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
+import { IUser } from './user.interface';
+import { User } from './user.model';
+import mongoose from 'mongoose';
+
+const updateUserDataIntoDB = async (
+  userId: string,
+  userData: Partial<IUser>,
+  user: any,
+) => {
+  if (userId !== user._id) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+  }
+
+  const existingUser = await User.findById(userId);
+
+  if (!existingUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
+
+  // Only allow updating selected field
+  const allowedUpdates = ['phone', 'name', 'bio', 'address'];
+  const updates = Object.keys(userData);
+
+  for (const update of updates) {
+    if (!allowedUpdates.includes(update)) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Invalid field');
+    }
+  }
+
+  const userUpdatedData = await User.findByIdAndUpdate(userId, userData, {
+    new: true,
+  });
+
+  return userUpdatedData;
+};
+
+const updateUserByAdmin = async (userId: string, userData: Partial<IUser>) => {
+  const existingUser = await User.findById(userId);
+
+  if (!existingUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
+
+  const userUpdatedData = await User.findByIdAndUpdate(userId, userData, {
+    new: true,
+  });
+
+  return userUpdatedData;
+};
+
+const updateUserProfilePicture = async (
+  userId: string,
+  file: any,
+  user: any,
+) => {
+  if (userId !== user._id) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+  }
+
+  const existingUser = await User.findById(userId);
+
+  if (!existingUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
+
+  // Check if the file is provided
+  if (file) {
+    const profilePicturePath = file.path;
+
+    // Check if the file path exists
+    if (!profilePicturePath) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Profile picture cannot update',
+      );
+    }
+
+    // Update the user's profile picture in the database
+    const userUpdatedData = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: profilePicturePath },
+      { new: true },
+    );
+
+    return userUpdatedData;
+  }
+
+  throw new AppError(httpStatus.BAD_REQUEST, 'No file provided');
+};
+
+const getAllUsers = async () => {
+  return User.find().select('-password');
+};
+
+const getUserProfile = async (userId: string) => {
+  const user = await User.findById(userId)
+    .populate({
+      path: 'followedVendors',
+      select: 'shopName address',
+    })
+    .populate('vendor')
+    .sort({ createdAt: -1 })
+    .exec();
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found.');
+  }
+
+  return user;
+};
+const getUsersForAdmin = async (
+  filters: { role?: string; search?: string },
+  limit = 10,
+  page = 1,
+) => {
+  const query: any = {};
+
+  if (filters.role) {
+    query.role = filters.role;
+  }
+  if (filters.search) {
+    // Check if the search value is a valid ObjectId
+    if (mongoose.Types.ObjectId.isValid(filters.search)) {
+      // If it's a valid ObjectId, query by _id
+      query.$or = [{ _id: filters.search }];
+    } else {
+      // Otherwise, search by name
+      query.$or = [{ name: { $regex: filters.search, $options: 'i' } }];
+    }
+  }
+
+  const skip = (page - 1) * limit;
+
+  const users = await User.find(query)
+    .populate({
+      path: 'vendor',
+      match: filters.role === 'vendor' ? {} : null,
+    })
+    .skip(skip)
+    .limit(limit)
+    .select('-password')
+    .exec();
+
+  const totalItems = await User.countDocuments(query);
+  const totalPages = Math.ceil(totalItems / limit);
+  const pagination = {
+    totalItems,
+    totalPages,
+    currentPage: page,
+    itemsPerPage: limit,
+  };
+
+  return { users, pagination };
+};
+
+export const UserService = {
+  getUserProfile,
+  getAllUsers,
+  updateUserDataIntoDB,
+  updateUserProfilePicture,
+  updateUserByAdmin,
+  getUsersForAdmin,
+};
