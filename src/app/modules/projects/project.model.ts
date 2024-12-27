@@ -16,6 +16,10 @@ const projectSchema = new Schema<IProject>(
       type: [String],
       required: true,
     },
+    infos: {
+      type: [String],
+      required: true,
+    },
     liveUrl: {
       type: String,
       required: false,

@@ -14,6 +14,9 @@ const createExperienceValidationSchema = z.object({
       .string({ required_error: 'Company name is required' })
       .min(1, { message: 'Company name must not be empty' })
       .trim(),
+    activities: z
+      .array(z.string({ required_error: 'Required' }))
+      .min(1, { message: 'activities must not be empty' }),
     companyWebsite: z
       .string({ required_error: 'Company website is required' })
       .min(1, { message: 'Company website must not be empty' })
@@ -46,6 +49,10 @@ const updateExperienceValidationSchema = z.object({
     description: z
       .string()
       .min(5, { message: 'Description must be at least 5 characters' })
+      .optional(),
+    activities: z
+      .array(z.string({ required_error: 'Required' }))
+      .min(1, { message: 'activities must not be empty' })
       .optional(),
     company: z.string().optional(),
     location: z.string().optional(),
